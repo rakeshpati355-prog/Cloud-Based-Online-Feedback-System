@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloud Feedback System</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+nav {
+    background: #0f172a;
+    color: white;
+    padding: 18px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.logo {
+    color: #38bdf8;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 18px;
+    cursor: pointer;
+}
+
+nav a:hover {
+    color: #38bdf8;
+}
+
+.container {
+    width: 86%;
+    max-width: 1200px;
+    margin: 30px auto;
+}
+
+.hero {
+    background:
+        linear-gradient(
+            rgba(15, 23, 42, .82),
+            rgba(15, 23, 42, .82)
+        ),
+        url("https://images.unsplash.com/photo-1553877522-43269d4ea984")
+        center/cover;
+
+    color: white;
+    padding: 80px 20px;
+    text-align: center;
+    border-radius: 16px;
+    margin-bottom: 30px;
+}
+
+.hero h1 {
+    font-size: 42px;
+    margin-bottom: 14px;
+}
+
+.hero p {
+    font-size: 18px;
+}
+
+.section {
+    background: white;
+    padding: 25px;
+    border-radius: 13px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 18px rgba(0,0,0,.07);
+}
+
+.section h2 {
+    margin-bottom: 20px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.stat {
+    background: white;
+    text-align: center;
+    padding: 22px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+}
+
+.stat h2 {
+    color: #0284c7;
+    font-size: 30px;
+    margin-bottom: 7px;
+}
+
+.stat p {
+    color: #64748b;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    font-size: 15px;
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+button {
+    border: none;
+    padding: 12px 18px;
+    border-radius: 7px;
+    background: #0284c7;
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+button:hover {
+    background: #0369a1;
+}
+
+.approve {
+    background: #16a34a;
+}
+
+.reject,
+.delete {
+    background: #dc2626;
+}
+
+.clear {
+    background: #475569;
+}
+
+.feedback-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+    gap: 20px;
+}
+
+.feedback-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 18px;
+}
+
+.feedback-card h3 {
+    color: #0369a1;
+    margin-bottom: 10px;
+}
+
+.feedback-card p {
+    color: #475569;
+    line-height: 1.7;
+    margin: 7px 0;
+    overflow-wrap: anywhere;
+}
+
+.stars {
+    color: #f59e0b;
+    font-size: 22px;
+    margin: 8px 0;
+}
+
+.status {
+    display: inline-block;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    margin: 8px 0;
+}
+
+.pending {
+    background: #d97706;
+}
+
+.approved {
+    background: #16a34a;
+}
+
+.rejected {
+    background: #dc2626;
+}
+
+.action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.search-box input {
+    flex: 1;
+}
+
+.empty {
+    color: #64748b;
+    padding: 15px 0;
+}
+
+footer {
+    color: #64748b;
+    text-align: center;
+    padding: 35px;
+}
+
+@media (max-width: 750px) {
+    .hero h1 {
+        font-size: 30px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full {
+        grid-column: auto;
+    }
+
+    .search-box {
+        display: block;
+    }
+
+    .search-box button {
+        margin-top: 10px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">FeedbackCloud</div>
+
+    <div>
+        <a onclick="goTo('homeSection')">Home</a>
+        <a onclick="goTo('submitSection')">Submit Feedback</a>
+        <a onclick="goTo('myFeedbackSection')">My Feedback</a>
+        <a onclick="goTo('adminSection')">Admin</a>
+    </div>
+</nav>
+
+<main class="container">
+
+    <section id="homeSection">
+        <div class="hero">
+            <h1>Cloud-Based Online Feedback System</h1>
+            <p>Share your ideas, ratings, suggestions, and complaints.</p>
+        </div>
+
+        <section class="section">
+            <h2>Approved Feedback</h2>
+
+            <div class="search-box">
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search approved feedback"
+                    onkeyup="displayApprovedFeedback()"
+                >
+
+                <button onclick="displayApprovedFeedback()">
+                    Search
+                </button>
+            </div>
+
+            <div
+                id="approvedFeedbackList"
+                class="feedback-grid"
+            ></div>
+        </section>
+    </section>
+
+
+    <section class="stats">
+        <div class="stat">
+            <h2 id="totalCount">0</h2>
+            <p>Total Feedback</p>
+        </div>
+
+        <div class="stat">
+            <h2 id="pendingCount">0</h2>
+            <p>Pending</p>
+        </div>
+
+        <div class="stat">
+            <h2 id="approvedCount">0</h2>
+            <p>Approved</p>
+        </div>
+
+        <div class="stat">
+            <h2 id="rejectedCount">0</h2>
+            <p>Rejected</p>
+        </div>
+    </section>
+
+
+    <section class="section" id="submitSection">
+        <h2>Submit Feedback</h2>
+
+        <form id="feedbackForm">
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        placeholder="Enter your name"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Feedback Category</label>
+
+                    <select id="category" required>
+                        <option value="">Select category</option>
+                        <option value="Website">Website</option>
+                        <option value="Application">Application</option>
+                        <option value="Service">Service</option>
+                        <option value="Support">Support</option>
+                        <option value="Suggestion">Suggestion</option>
+                        <option value="Complaint">Complaint</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="rating">Rating</label>
+
+                    <select id="rating" required>
+                        <option value="">Select rating</option>
+                        <option value="5">★★★★★ - Excellent</option>
+                        <option value="4">★★★★☆ - Very Good</option>
+                        <option value="3">★★★☆☆ - Good</option>
+                        <option value="2">★★☆☆☆ - Poor</option>
+                        <option value="1">★☆☆☆☆ - Very Poor</option>
+                    </select>
+                </div>
+
+                <div class="form-group full">
+                    <label for="message">Your Feedback</label>
+
+                    <textarea
+                        id="message"
+                        placeholder="Write your feedback here..."
+                        required
+                    ></textarea>
+                </div>
+
+                <div class="form-group full">
+                    <button type="submit">
+                        Submit Feedback
+                    </button>
+                </div>
+
+            </div>
+        </form>
+    </section>
+
+
+    <section class="section" id="myFeedbackSection">
+        <h2>My Feedback</h2>
+
+        <div class="search-box">
+            <input
+                type="email"
+                id="myEmail"
+                placeholder="Enter your email"
+            >
+
+            <button onclick="displayMyFeedback()">
+                View My Feedback
+            </button>
+        </div>
+
+        <div
+            id="myFeedbackList"
+            class="feedback-grid"
+        ></div>
+    </section>
+
+
+    <section class="section" id="adminSection">
+        <h2>Admin Panel</h2>
+
+        <p>
+            Approve, reject, or delete submitted feedback.
+        </p>
+
+        <br>
+
+        <div
+            id="adminFeedbackList"
+            class="feedback-grid"
+        ></div>
+    </section>
+
+</main>
+
+<footer>
+    Cloud-Based Online Feedback System
+</footer>
+
+
+<script>
+const feedbackForm =
+    document.getElementById("feedbackForm");
+
+const approvedFeedbackList =
+    document.getElementById("approvedFeedbackList");
+
+const myFeedbackList =
+    document.getElementById("myFeedbackList");
+
+const adminFeedbackList =
+    document.getElementById("adminFeedbackList");
+
+
+function getFeedback() {
+    return JSON.parse(
+        localStorage.getItem("feedbackData")
+    ) || [];
+}
+
+
+function saveFeedback(feedback) {
+    localStorage.setItem(
+        "feedbackData",
+        JSON.stringify(feedback)
+    );
+}
+
+
+function createFeedbackId() {
+    return "FB-" + Math.floor(
+        100000 + Math.random() * 900000
+    );
+}
+
+
+function escapeHTML(value) {
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+
+function showStars(rating) {
+    const number = Number(rating);
+
+    return "★".repeat(number) +
+           "☆".repeat(5 - number);
+}
+
+
+function statusClass(status) {
+    if (status === "Approved") {
+        return "approved";
+    }
+
+    if (status === "Rejected") {
+        return "rejected";
+    }
+
+    return "pending";
+}
+
+
+feedbackForm.addEventListener(
+    "submit",
+    function(event) {
+        event.preventDefault();
+
+        const newFeedback = {
+            id: createFeedbackId(),
+
+            name: document
+                .getElementById("name")
+                .value
+                .trim(),
+
+            email: document
+                .getElementById("email")
+                .value
+                .trim()
+                .toLowerCase(),
+
+            category: document
+                .getElementById("category")
+                .value,
+
+            rating: document
+                .getElementById("rating")
+                .value,
+
+            message: document
+                .getElementById("message")
+                .value
+                .trim(),
+
+            status: "Pending",
+
+            date: new Date().toLocaleString()
+        };
+
+        const feedback = getFeedback();
+
+        feedback.push(newFeedback);
+
+        saveFeedback(feedback);
+
+        feedbackForm.reset();
+
+        updateDashboard();
+        displayApprovedFeedback();
+        displayAdminFeedback();
+
+        document.getElementById("myEmail")
+            .value = newFeedback.email;
+
+        displayMyFeedback();
+
+        alert(
+            "Feedback submitted successfully.\\n" +
+            "Feedback ID: " +
+            newFeedback.id
+        );
+    }
+);
+
+
+function displayApprovedFeedback() {
+    const feedback = getFeedback();
+
+    const search =
+        document.getElementById("searchInput")
+        .value
+        .toLowerCase()
+        .trim();
+
+    const approved = feedback.filter(item =>
+        item.status === "Approved" &&
+        (
+            item.name.toLowerCase().includes(search) ||
+            item.category.toLowerCase().includes(search) ||
+            item.message.toLowerCase().includes(search)
+        )
+    );
+
+    if (approved.length === 0) {
+        approvedFeedbackList.innerHTML =
+            '<p class="empty">No approved feedback found.</p>';
+
+        return;
+    }
+
+    approvedFeedbackList.innerHTML =
+        approved.map(item => `
+            <div class="feedback-card">
+                <h3>${escapeHTML(item.category)}</h3>
+
+                <p>
+                    <b>Submitted by:</b>
+                    ${escapeHTML(item.name)}
+                </p>
+
+                <div class="stars">
+                    ${showStars(item.rating)}
+                </div>
+
+                <p>
+                    ${escapeHTML(item.message)}
+                </p>
+
+                <small>
+                    ${escapeHTML(item.date)}
+                </small>
+            </div>
+        `).join("");
+}
+
+
+function displayMyFeedback() {
+    const email =
+        document.getElementById("myEmail")
+        .value
+        .trim()
+        .toLowerCase();
+
+    if (!email) {
+        alert("Please enter your email address.");
+        return;
+    }
+
+    const feedback = getFeedback();
+
+    const userFeedback = feedback.filter(
+        item => item.email === email
+    );
+
+    if (userFeedback.length === 0) {
+        myFeedbackList.innerHTML =
+            '<p class="empty">No feedback found.</p>';
+
+        return;
+    }
+
+    myFeedbackList.innerHTML =
+        userFeedback.map(item => `
+            <div class="feedback-card">
+                <h3>${escapeHTML(item.category)}</h3>
+
+                <p>
+                    <b>Feedback ID:</b>
+                    ${escapeHTML(item.id)}
+                </p>
+
+                <div class="stars">
+                    ${showStars(item.rating)}
+                </div>
+
+                <p>
+                    ${escapeHTML(item.message)}
+                </p>
+
+                <p>
+                    <b>Status:</b>
+
+                    <span class="status
+                        ${statusClass(item.status)}">
+                        ${escapeHTML(item.status)}
+                    </span>
+                </p>
+
+                <small>
+                    ${escapeHTML(item.date)}
+                </small>
+            </div>
+        `).join("");
+}
+
+
+function displayAdminFeedback() {
+    const feedback = getFeedback();
+
+    if (feedback.length === 0) {
+        adminFeedbackList.innerHTML =
+            '<p class="empty">No feedback submitted yet.</p>';
+
+        return;
+    }
+
+    adminFeedbackList.innerHTML =
+        feedback.map((item, index) => `
+            <div class="feedback-card">
+                <h3>${escapeHTML(item.category)}</h3>
+
+                <p>
+                    <b>ID:</b>
+                    ${escapeHTML(item.id)}
+                </p>
+
+                <p>
+                    <b>Name:</b>
+                    ${escapeHTML(item.name)}
+                </p>
+
+                <p>
+                    <b>Email:</b>
+                    ${escapeHTML(item.email)}
+                </p>
+
+                <div class="stars">
+                    ${showStars(item.rating)}
+                </div>
+
+                <p>
+                    ${escapeHTML(item.message)}
+                </p>
+
+                <p>
+                    <b>Status:</b>
+
+                    <span class="status
+                        ${statusClass(item.status)}">
+                        ${escapeHTML(item.status)}
+                    </span>
+                </p>
+
+                <small>
+                    ${escapeHTML(item.date)}
+                </small>
+
+                <div class="action-buttons">
+                    <button
+                        class="approve"
+                        onclick="changeStatus(${index}, 'Approved')"
+                    >
+                        Approve
+                    </button>
+
+                    <button
+                        class="reject"
+                        onclick="changeStatus(${index}, 'Rejected')"
+                    >
+                        Reject
+                    </button>
+
+                    <button
+                        class="delete"
+                        onclick="deleteFeedback(${index})"
+                    >
+                        Delete
+                    </button>
+                </div>
+            </div>
+        `).join("");
+}
+
+
+function changeStatus(index, newStatus) {
+    const feedback = getFeedback();
+
+    feedback[index].status = newStatus;
+
+    saveFeedback(feedback);
+
+    updateDashboard();
+    displayApprovedFeedback();
+    displayMyFeedback();
+    displayAdminFeedback();
+
+    alert(
+        "Feedback status updated to " +
+        newStatus
+    );
+}
+
+
+function deleteFeedback(index) {
+    if (!confirm("Do you want to delete this feedback?")) {
+        return;
+    }
+
+    const feedback = getFeedback();
+
+    feedback.splice(index, 1);
+
+    saveFeedback(feedback);
+
+    updateDashboard();
+    displayApprovedFeedback();
+    displayMyFeedback();
+    displayAdminFeedback();
+
+    alert("Feedback deleted successfully.");
+}
+
+
+function updateDashboard() {
+    const feedback = getFeedback();
+
+    document.getElementById("totalCount")
+        .textContent = feedback.length;
+
+    document.getElementById("pendingCount")
+        .textContent = feedback.filter(
+            item => item.status === "Pending"
+        ).length;
+
+    document.getElementById("approvedCount")
+        .textContent = feedback.filter(
+            item => item.status === "Approved"
+        ).length;
+
+    document.getElementById("rejectedCount")
+        .textContent = feedback.filter(
+            item => item.status === "Rejected"
+        ).length;
+}
+
+
+function goTo(sectionId) {
+    document.getElementById(sectionId)
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+}
+
+
+updateDashboard();
+displayApprovedFeedback();
+displayAdminFeedback();
+</script>
+
+</body>
+</html>
